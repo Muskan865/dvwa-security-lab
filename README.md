@@ -88,9 +88,8 @@ All user records were displayed.
 
 Screenshot:
 
-```
 ![SQL Injection Low](images/sql/low.png)
-```
+
 
 Explanation:
 
@@ -734,15 +733,4 @@ If deployed publicly, attackers could:
 These vulnerabilities demonstrate common weaknesses described in the **OWASP Foundation Top 10 security risks.
 
 ---
-
-# 8. Conclusion
-
-This lab demonstrated multiple web application vulnerabilities using DVWA deployed in Docker. Testing across Low, Medium, and High security levels showed how improper input validation and weak security controls allow attackers to exploit web applications.
-
-The exercise highlights the importance of secure coding practices such as input validation, output encoding, prepared SQL statements, and strong authentication mechanisms.
-
-Understanding these vulnerabilities and how they are mitigated is essential for developing secure web applications and performing professional security assessments.
-
----
-
 
