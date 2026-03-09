@@ -2,8 +2,6 @@
 
 ## Application Security Testing Lab
 
-This lab demonstrates vulnerability assessment using the **Damn Vulnerable Web Application (DVWA)** deployed in a Docker container. The goal of this exercise is to analyze common web vulnerabilities, understand how security controls affect exploitation, and document findings in a professional security report.
-
 ---
 
 # 1. Environment Setup
