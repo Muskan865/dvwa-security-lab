@@ -45,19 +45,37 @@ vulnerables/web-dvwa
 docker ps
 ```
 
-Example output:
+Output:
 
 ```bash
 CONTAINER ID   IMAGE                  COMMAND      CREATED         STATUS         PORTS                                     NAMES
 94f3c45d157b   vulnerables/web-dvwa   "/main.sh"   3 minutes ago   Up 3 minutes   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   dvwa
 ```
 
+---
+
+## Inspect Container
+
+```bash
+docker inspect dvwa
+```
+
+add screenshot
+---
+
+## Container Logs
+
+```bash
+docker logs dvwa
+```
+
+add screenshot
+
 Open in browser:
 
 ```
 http://localhost:8080
 ```
-
 ---
 
 # 3. Vulnerability Testing
@@ -117,9 +135,7 @@ User records were still displayed.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/sql/medium.png)
 
 Explanation:
 
@@ -143,9 +159,7 @@ Custom values appeared in the result.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/sql/high.png)
 
 Explanation:
 
@@ -169,9 +183,7 @@ A JavaScript alert popup appeared.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/xss_reflected/low.png)
 
 Explanation:
 
@@ -193,9 +205,7 @@ Alert popup appeared.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/xss_reflected/medium.png)
 
 Explanation:
 
@@ -217,9 +227,7 @@ Alert popup appeared.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/xss_reflected/high.png)
 
 Explanation:
 
@@ -251,9 +259,7 @@ The alert appeared every time the page reloaded.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/xss_stored/low.png)
 
 Explanation:
 
@@ -275,9 +281,7 @@ Alert appeared.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/xss_stored/medium.png)
 
 Explanation:
 
@@ -296,12 +300,6 @@ Payload Used:
 Result:
 
 The payload did not execute JavaScript.
-
-Screenshot:
-
-```
-[Insert Screenshot Here]
-```
 
 Explanation:
 
@@ -325,9 +323,7 @@ The directory listing was displayed after the ping command executed.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/command_injection/low.png)
 
 Explanation:
 
@@ -349,9 +345,7 @@ The ping command ran in the background and the directory listing was displayed.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/command_injection/medium.png)
 
 Explanation:
 
@@ -373,9 +367,7 @@ Both ping output and directory listing were displayed.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/command_injection/high.png)
 
 Explanation:
 
@@ -399,9 +391,7 @@ The message **"User ID exists in the database"** appeared.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/sql_blind/low.png)
 
 Explanation:
 
@@ -423,9 +413,7 @@ User ID exists in the database.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/sql_blind/medium.png)
 
 Explanation:
 
@@ -447,9 +435,7 @@ The webpage response was delayed by approximately 5 seconds.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/sql_blind/hard.png)
 
 Explanation:
 
@@ -473,9 +459,7 @@ Token updated and validation succeeded.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/JavaScript/low.png)
 
 Explanation:
 
@@ -497,9 +481,7 @@ Token regenerated successfully.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/JavaScript/medium.png)
 
 Explanation:
 
@@ -512,12 +494,6 @@ Token generation still occurs in client-side JavaScript. Attackers can execute t
 Result:
 
 Token could not be regenerated manually.
-
-Screenshot:
-
-```
-[Insert Screenshot Here]
-```
 
 Explanation:
 
@@ -541,9 +517,7 @@ Login successful.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/brute_force/low.png)
 
 Explanation:
 
@@ -565,9 +539,7 @@ Login successful.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/brute_force/medium.png)
 
 Explanation:
 
@@ -589,9 +561,7 @@ Authentication successful.
 
 Screenshot:
 
-```
-[Insert Screenshot Here]
-```
+![SQL Injection Low](images/brute_force/high.png)
 
 Explanation:
 
@@ -599,60 +569,8 @@ Additional protections such as CSRF tokens are implemented. However, weak creden
 
 ---
 
-# 4. Docker Inspection
 
-## Running Containers
-
-```bash
-docker ps
-```
-
----
-
-## Inspect Container
-
-```bash
-docker inspect dvwa
-```
-
-This command shows detailed container configuration including networking, environment variables, and mounted volumes.
-
----
-
-## Container Logs
-
-```bash
-docker logs dvwa
-```
-
-Logs show application activity and server events.
-
----
-
-## Access Container Shell
-
-```bash
-docker exec -it dvwa /bin/bash
-```
-
-Inside the container:
-
-```bash
-ls /var/www/html
-```
-
-Example output:
-
-```
-config
-dvwa
-hackable
-index.php
-```
-
----
-
-# 5. Application Architecture Analysis
+# 4. Application Architecture Analysis
 
 ## Where Application Files Are Stored
 
@@ -682,7 +600,7 @@ Docker isolates the DVWA environment by running it inside a container. The conta
 
 ---
 
-# 6. Security Analysis
+# 5. Security Analysis
 
 ## Why SQL Injection Succeeds at Low Security
 
@@ -716,7 +634,7 @@ If deployed publicly, attackers could:
 
 ---
 
-# 7. OWASP Top 10 Mapping
+# 6. OWASP Top 10 Mapping
 
 | Vulnerability       | OWASP Category                                  |
 | ------------------- | ----------------------------------------------- |
