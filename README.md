@@ -109,7 +109,7 @@ This causes the database to return all records.
 Payload Used:
 
 ```
-1/2/3/4/5
+1 or 2 or 3 or 4 or 5 (numbers were in a drop down))
 ```
 
 Result:
@@ -122,9 +122,7 @@ Screenshot:
 
 Explanation:
 
-The Medium level uses `mysql_real_escape_string()` to escape quotes and special characters. However, the input parameter is numeric and not enclosed in quotes in the SQL query. Because of this, escaping does not prevent SQL manipulation.
-
-The query remains vulnerable because the developer relied only on input escaping rather than parameterized queries.
+At the Medium security level, DVWA uses mysql_real_escape_string() to escape quotes. However, the input is still used directly in the SQL query without parameterized queries. Since the input is numeric and not enclosed in quotes, SQL logic manipulation is still possible.
 
 ---
 
@@ -268,7 +266,8 @@ Screenshot:
 
 Explanation:
 
-The Medium level introduces partial filtering, but not all fields are protected. The Name field does not properly sanitize input, allowing JavaScript code to be stored and executed.
+At the Medium level, DVWA attempts to sanitize the message field but does not fully sanitize all inputs. Attackers can bypass the filter by altering the casing of the script tag or injecting JavaScript through fields that are not properly validated.
+
 
 ---
 
@@ -354,7 +353,8 @@ Screenshot:
 
 Explanation:
 
-The developer attempted to filter input using pattern matching and `trim()`. However, `trim()` only removes whitespace from the beginning and end of the input. Removing spaces around the pipe operator allows the attacker to bypass the filter.
+At the High security level, the application attempts to filter dangerous characters using pattern matching. However, the filter does not account for all command chaining operators. By using the pipe operator (|), attackers can still execute additional commands.
+
 
 ---
 
@@ -785,7 +785,7 @@ Screenshot:
 
 Explanation:
 
-At High security, DVWA generates session IDs using MD5 hashes. While this increases unpredictability, MD5 is considered cryptographically weak and modern applications should use secure random generators.
+At High security, session IDs are generated using MD5 hashes based on random values. While this improves unpredictability compared to sequential IDs, MD5 is not considered cryptographically secure for modern session management.
 
 ---
 
@@ -995,8 +995,7 @@ Screenshot:
 
 Explanation:
 
-Although additional validation is implemented, the application does not properly validate URI schemes. Using the file:// protocol bypasses the filter and allows sensitive files to be included.
-
+The High security level attempts to restrict file inclusion by validating input. However, the validation does not properly block alternative file access methods such as the file:// protocol. This allows attackers to bypass the filter and access sensitive files.
 
 # 4. Docker Inspection Tasks
 
@@ -1344,19 +1343,37 @@ If deployed publicly, attackers could:
 
 ---
 
-# 6. OWASP Top 10 Mapping
+## OWASP Top 10 Mapping
 
 | Vulnerability       | OWASP Category                                  |
 | ------------------- | ----------------------------------------------- |
 | SQL Injection       | A03: Injection                                  |
 | Blind SQL Injection | A03: Injection                                  |
 | Command Injection   | A03: Injection                                  |
-| Reflected XSS       | A03: Injection                                  |
+| Reflected XSS       | A03: Injection (or XSS under A03)               |
 | Stored XSS          | A03: Injection                                  |
 | Brute Force         | A07: Identification and Authentication Failures |
 | JavaScript Attacks  | A05: Security Misconfiguration                  |
-
-These vulnerabilities demonstrate common weaknesses described in the **OWASP Foundation Top 10 security risks.
+| File Upload         | A05: Security Misconfiguration                  |
+| CSRF                | A01: Broken Access Control                      |
 
 ---
 
+#6. HTTPS Implementation (Bonus)
+
+DVWA was deployed behind an Nginx reverse proxy with a self-signed SSL certificate.  
+Nginx handled HTTPS connections and forwarded traffic to the DVWA container running on HTTP.
+
+Testing showed that HTTP traffic exposed credentials in plain text, while HTTPS traffic encrypted the communication using TLS.
+
+---
+HTTP transmits data in plain text. When accessing DVWA through HTTP, sensitive information such as usernames and passwords can be viewed directly in the network traffic.
+
+HTTPS encrypts communication using SSL/TLS. When accessing DVWA through HTTPS, the traffic is encrypted and cannot be easily read by attackers.
+
+Observation:
+
+HTTP request shows:
+username=admin&password=password
+
+HTTPS request shows encrypted TLS packets instead of readable data.
