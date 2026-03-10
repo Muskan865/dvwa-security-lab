@@ -1359,7 +1359,7 @@ If deployed publicly, attackers could:
 
 ---
 
-#6. HTTPS Implementation (Bonus)
+# 6. HTTPS Implementation (Bonus)
 
 DVWA was deployed behind an Nginx reverse proxy with a self-signed SSL certificate.  
 Nginx handled HTTPS connections and forwarded traffic to the DVWA container running on HTTP.
