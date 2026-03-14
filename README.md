@@ -474,13 +474,26 @@ Token generation still occurs in client-side JavaScript. Attackers can execute t
 
 ## Security Level: High
 
+Payload Used:
+
+```
+In Console:
+document.getElementById("phrase").value="success";
+document.getElementById("token").value=sha256(sha256("XXsseccus")+"ZZ");
+document.forms[0].submit();
+```
+
 Result:
 
-Token could not be regenerated manually.
+Token regenerated successfully.
+
+Screenshot:
+
+![JavaScript_hogh](images/JavaScript/high.png)
 
 Explanation:
 
-Token validation is moved to the server side. Since the browser no longer controls token generation, manually executing JavaScript functions cannot bypass the validation mechanism.
+There is an attempt to increase security using an obfuscated script called high.js, which generates a token through three separate functions and includes additional conditions such as timing checks to make the process more complex. However, by understanding how the functions worked, we can manually recreate the token by following the same logic used in the script and successfully bypass the intended protection.
 
 ---
 
@@ -999,363 +1012,108 @@ The High security level attempts to restrict file inclusion by validating input.
 
 # 4. Docker Inspection Tasks
 
-
+### Command
 ```bash
 docker ps
 ```
 
-Output: 
-```bash
-CONTAINER ID   IMAGE                  COMMAND      CREATED      STATUS          PORTS                                     NAMES
-94f3c45d157b   vulnerables/web-dvwa   "/main.sh"   2 days ago   Up 11 seconds   0.0.0.0:8080->80/tcp, [::]:8080->80/tcp   dvwa
-```
----
+### Output
+![docker ps](images/docker_ps.png)
 
+### Command
 ```bash
 docker inspect dvwa
 ```
-Output:
-```bash
-[
-    {
-        "Id": "94f3c45d157bfd78ef049253ba3c9f2b5572e2aa3b954c08960aab2b4d92dbfe",
-        "Created": "2026-03-07T09:04:02.91400642Z",
-        "Path": "/main.sh",
-        "Args": [],
-        "State": {
-            "Status": "running",
-            "Running": true,
-            "Paused": false,
-            "Restarting": false,
-            "OOMKilled": false,
-            "Dead": false,
-            "Pid": 421,
-            "ExitCode": 0,
-            "Error": "",
-            "StartedAt": "2026-03-10T04:33:40.016095069Z",
-            "FinishedAt": "2026-03-10T04:31:08.2097005Z"
-        },
-        "Image": "sha256:dae203fe11646a86937bf04db0079adef295f426da68a92b40e3b181f337daa7",
-        "ResolvConfPath": "/var/lib/docker/containers/94f3c45d157bfd78ef049253ba3c9f2b5572e2aa3b954c08960aab2b4d92dbfe/resolv.conf",
-        "HostnamePath": "/var/lib/docker/containers/94f3c45d157bfd78ef049253ba3c9f2b5572e2aa3b954c08960aab2b4d92dbfe/hostname",
-        "HostsPath": "/var/lib/docker/containers/94f3c45d157bfd78ef049253ba3c9f2b5572e2aa3b954c08960aab2b4d92dbfe/hosts",
-        "LogPath": "/var/lib/docker/containers/94f3c45d157bfd78ef049253ba3c9f2b5572e2aa3b954c08960aab2b4d92dbfe/94f3c45d157bfd78ef049253ba3c9f2b5572e2aa3b954c08960aab2b4d92dbfe-json.log",
-        "Name": "/dvwa",
-        "RestartCount": 0,
-        "Driver": "overlayfs",
-        "Platform": "linux",
-        "MountLabel": "",
-        "ProcessLabel": "",
-        "AppArmorProfile": "",
-        "ExecIDs": null,
-        "HostConfig": {
-            "Binds": null,
-            "ContainerIDFile": "",
-            "LogConfig": {
-                "Type": "json-file",
-                "Config": {}
-            },
-            "NetworkMode": "bridge",
-            "PortBindings": {
-                "80/tcp": [
-                    {
-                        "HostIp": "",
-                        "HostPort": "8080"
-                    }
-                ]
-            },
-            "RestartPolicy": {
-                "Name": "no",
-                "MaximumRetryCount": 0
-            },
-            "AutoRemove": false,
-            "VolumeDriver": "",
-            "VolumesFrom": null,
-            "ConsoleSize": [
-                28,
-                120
-            ],
-            "CapAdd": null,
-            "CapDrop": null,
-            "CgroupnsMode": "private",
-            "Dns": [],
-            "DnsOptions": [],
-            "DnsSearch": [],
-            "ExtraHosts": null,
-            "GroupAdd": null,
-            "IpcMode": "private",
-            "Cgroup": "",
-            "Links": null,
-            "OomScoreAdj": 0,
-            "PidMode": "",
-            "Privileged": false,
-            "PublishAllPorts": false,
-            "ReadonlyRootfs": false,
-            "SecurityOpt": null,
-            "UTSMode": "",
-            "UsernsMode": "",
-            "ShmSize": 67108864,
-            "Runtime": "runc",
-            "Isolation": "",
-            "CpuShares": 0,
-            "Memory": 0,
-            "NanoCpus": 0,
-            "CgroupParent": "",
-            "BlkioWeight": 0,
-            "BlkioWeightDevice": [],
-            "BlkioDeviceReadBps": [],
-            "BlkioDeviceWriteBps": [],
-            "BlkioDeviceReadIOps": [],
-            "BlkioDeviceWriteIOps": [],
-            "CpuPeriod": 0,
-            "CpuQuota": 0,
-            "CpuRealtimePeriod": 0,
-            "CpuRealtimeRuntime": 0,
-            "CpusetCpus": "",
-            "CpusetMems": "",
-            "Devices": [],
-            "DeviceCgroupRules": null,
-            "DeviceRequests": null,
-            "MemoryReservation": 0,
-            "MemorySwap": 0,
-            "MemorySwappiness": null,
-            "OomKillDisable": null,
-            "PidsLimit": null,
-            "Ulimits": [],
-            "CpuCount": 0,
-            "CpuPercent": 0,
-            "IOMaximumIOps": 0,
-            "IOMaximumBandwidth": 0,
-            "MaskedPaths": [
-                "/proc/acpi",
-                "/proc/asound",
-                "/proc/interrupts",
-                "/proc/kcore",
-                "/proc/keys",
-                "/proc/latency_stats",
-                "/proc/sched_debug",
-                "/proc/scsi",
-                "/proc/timer_list",
-                "/proc/timer_stats",
-                "/sys/devices/virtual/powercap",
-                "/sys/firmware"
-            ],
-            "ReadonlyPaths": [
-                "/proc/bus",
-                "/proc/fs",
-                "/proc/irq",
-                "/proc/sys",
-                "/proc/sysrq-trigger"
-            ]
-        },
-        "Storage": {
-            "RootFS": {
-                "Snapshot": {
-                    "Name": "overlayfs"
-                }
-            }
-        },
-        "Mounts": [],
-        "Config": {
-            "Hostname": "94f3c45d157b",
-            "Domainname": "",
-            "User": "",
-            "AttachStdin": false,
-            "AttachStdout": false,
-            "AttachStderr": false,
-            "ExposedPorts": {
-                "80/tcp": {}
-            },
-            "Tty": false,
-            "OpenStdin": false,
-            "StdinOnce": false,
-            "Env": [
-                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-            ],
-            "Cmd": null,
-            "Image": "vulnerables/web-dvwa",
-            "Volumes": null,
-            "WorkingDir": "",
-            "Entrypoint": [
-                "/main.sh"
-            ],
-            "Labels": {
-                "maintainer": "opsxcq@strm.sh"
-            },
-            "StopTimeout": 1
-        },
-        "NetworkSettings": {
-            "SandboxID": "2d0616aa1102b8a8285302980fc9bdecc449158adc283d290dafa4eae3939b98",
-            "SandboxKey": "/var/run/docker/netns/2d0616aa1102",
-            "Ports": {
-                "80/tcp": [
-                    {
-                        "HostIp": "0.0.0.0",
-                        "HostPort": "8080"
-                    },
-                    {
-                        "HostIp": "::",
-                        "HostPort": "8080"
-                    }
-                ]
-            },
-            "Networks": {
-                "bridge": {
-                    "IPAMConfig": null,
-                    "Links": null,
-                    "Aliases": null,
-                    "DriverOpts": null,
-                    "GwPriority": 0,
-                    "NetworkID": "d365a3da2196a3c580213cd712ccd0966deb2e1875da9aafe9e4acfadca9c8b4",
-                    "EndpointID": "7e623b0d83c8f952f9631174ae989fde0f05df968a04da1105147907299d1a18",
-                    "Gateway": "172.17.0.1",
-                    "IPAddress": "172.17.0.2",
-                    "MacAddress": "e2:81:8d:5d:88:2a",
-                    "IPPrefixLen": 16,
-                    "IPv6Gateway": "",
-                    "GlobalIPv6Address": "",
-                    "GlobalIPv6PrefixLen": 0,
-                    "DNSNames": null
-                }
-            }
-        },
-        "ImageManifestDescriptor": {
-            "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
-            "digest": "sha256:dae203fe11646a86937bf04db0079adef295f426da68a92b40e3b181f337daa7",
-            "size": 1997,
-            "platform": {
-                "architecture": "amd64",
-                "os": "linux"
-            }
-        }
-    }
-]
-```
----
 
+### Output
+![docker inspect](images/docker_inspect.png)
+
+### Command
 ```bash
 docker logs dvwa
 ```
-Output:
 
-```bash
-[+] Starting mysql...
-Starting MariaDB database server: mysqld.
-[+] Starting apache
-AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.17.0.2. Set the 'ServerName' directive globally to suppress this message
-Starting Apache httpd web server: apache2.
-==> /var/log/apache2/access.log <==
+### Output
+![docker logs](images/docker_logs.png)
 
-==> /var/log/apache2/error.log <==
-[Sat Mar 07 09:04:05.733803 2026] [mpm_prefork:notice] [pid 284] AH00163: Apache/2.4.25 (Debian) configured -- resuming normal operations
-[Sat Mar 07 09:04:05.734071 2026] [core:notice] [pid 284] AH00094: Command line: '/usr/sbin/apache2'
-
-==> /var/log/apache2/other_vhosts_access.log <==
-
-==> /var/log/apache2/access.log <==
-172.17.0.1 - - [07/Mar/2026:09:07:54 +0000] "GET / HTTP/1.1" 302 479 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:07:54 +0000] "GET /login.php HTTP/1.1" 200 1049 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:07:54 +0000] "GET /dvwa/css/login.css HTTP/1.1" 200 741 "http://localhost:8080/login.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:07:54 +0000] "GET /dvwa/images/login_logo.png HTTP/1.1" 200 9374 "http://localhost:8080/login.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:07:54 +0000] "GET /favicon.ico HTTP/1.1" 200 1706 "http://localhost:8080/login.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:08:19 +0000] "POST /login.php HTTP/1.1" 302 337 "http://localhost:8080/login.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:08:19 +0000] "GET /setup.php HTTP/1.1" 200 2042 "http://localhost:8080/login.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:08:19 +0000] "GET /dvwa/css/main.css HTTP/1.1" 200 1445 "http://localhost:8080/setup.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:08:19 +0000] "GET /dvwa/js/dvwaPage.js HTTP/1.1" 200 816 "http://localhost:8080/setup.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:08:19 +0000] "GET /dvwa/images/spanner.png HTTP/1.1" 200 748 "http://localhost:8080/setup.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:08:19 +0000] "GET /dvwa/images/logo.png HTTP/1.1" 200 5331 "http://localhost:8080/setup.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:08:19 +0000] "GET /dvwa/js/add_event_listeners.js HTTP/1.1" 200 625 "http://localhost:8080/setup.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:09:11 +0000] "POST /setup.php HTTP/1.1" 302 338 "http://localhost:8080/setup.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-172.17.0.1 - - [07/Mar/2026:09:09:11 +0000] "GET /setup.php HTTP/1.1" 200 2179 "http://localhost:8080/setup.php" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
-
-```
----
+### Command
 ```bash
 docker exec -it dvwa /bin/bash
 ls /var/www/html
 ```
-Output:
-```bash
-CHANGELOG.md  about.php  dvwa         hackable     instructions.php  php.ini      security.php
-COPYING.txt   config     external     ids_log.php  login.php         phpinfo.php  setup.php
-README.md     docs       favicon.ico  index.php    logout.php        robots.txt   vulnerabilities
-```
----
-## Where Application Files Are Stored
 
-Application files are located in:
+### Output
+![docker ls](images/docker_exec.png)
+
+### Application File Location
+
+Application files are stored in:
 
 ```
 /var/www/html
 ```
 
-This is the default web root directory used by Apache web servers.
+This directory is the default web root used by the Apache web server inside the container.
 
----
+### Backend Technology
 
-## Backend Technology Used
+DVWA uses the following backend technologies:
 
-DVWA uses:
+- **PHP** for server-side logic  
+- **MySQL / MariaDB** for database management  
+- **Apache** as the web server
 
-* PHP for server-side logic
-* MySQL database
-* Apache web server
+### Docker Isolation
 
----
-
-## How Docker Provides Isolation
-
-Docker isolates the DVWA environment by running it inside a container. The container includes its own filesystem, dependencies, and runtime environment. This prevents the vulnerable application from affecting the host system and allows safe testing.
+Docker runs DVWA inside a container that includes its own filesystem, dependencies, and runtime environment. This isolates the vulnerable application from the host system, allowing security testing without affecting the host operating system.
 
 ---
 
 # 5. Security Analysis
 
-## Why SQL Injection Succeeds at Low Security
+### Why SQL Injection Succeeds at Low Security
 
-At the Low security level, user input is inserted directly into SQL queries without validation or sanitization. Because the application dynamically constructs SQL queries, attackers can modify the query logic.
+At the Low security level, user input is directly inserted into SQL queries without validation or sanitization. Because the application dynamically constructs SQL queries, an attacker can modify the structure of the query and inject malicious SQL code.
 
----
+### Control That Prevents It at High Security
 
-## What Control Prevents It at High Security
+The most effective protection is the use of **prepared statements (parameterized queries)**. These separate SQL commands from user input, ensuring that input is treated strictly as data rather than executable SQL code.
 
-The most effective control is the use of **prepared statements (parameterized queries)**. These separate SQL code from user input, preventing injected commands from being executed.
+### Does HTTPS Prevent These Attacks?
 
----
+No.  
 
-## Does HTTPS Prevent These Attacks?
+HTTPS only encrypts data during transmission between the client and server. It does not protect against vulnerabilities such as SQL injection or cross-site scripting because these attacks exploit flaws in the application logic rather than the network communication.
 
-No.
+### Risks if the Application Is Publicly Accessible
 
-HTTPS encrypts data during transmission but does not prevent vulnerabilities such as SQL injection or cross-site scripting. These attacks exploit weaknesses in server-side application logic rather than network communication.
+If the application were deployed publicly with such vulnerabilities, attackers could:
 
----
-
-## Risks if the Application is Publicly Accessible
-
-If deployed publicly, attackers could:
-
-* Steal sensitive data
-* Execute malicious scripts
-* Gain unauthorized system access
-* Modify or delete database records
-* Compromise user accounts
-
----
+- Steal sensitive information from the database  
+- Execute malicious scripts  
+- Gain unauthorized access to the system  
+- Modify or delete database records  
+- Compromise user accounts
 
 ## OWASP Top 10 Mapping
 
-| Vulnerability       | OWASP Category                                  |
-| ------------------- | ----------------------------------------------- |
-| SQL Injection       | A03: Injection                                  |
-| Blind SQL Injection | A03: Injection                                  |
-| Command Injection   | A03: Injection                                  |
-| Reflected XSS       | A03: Injection (or XSS under A03)               |
-| Stored XSS          | A03: Injection                                  |
+| Vulnerability       | OWASP Category                                   |
+|---------------------|--------------------------------------------------|
 | Brute Force         | A07: Identification and Authentication Failures |
-| JavaScript Attacks  | A05: Security Misconfiguration                  |
-| File Upload         | A05: Security Misconfiguration                  |
-| CSRF                | A01: Broken Access Control                      |
+| SQL Injection       | A03: Injection                                   |
+| Blind SQL Injection | A03: Injection                                   |
+| Command Injection   | A03: Injection                                   |
+| Reflected XSS       | A03: Injection                                   |
+| DOM XSS             | A03: Injection                                   |
+| Stored XSS          | A03: Injection                                   |
+| JavaScript Attacks  | A05: Security Misconfiguration                   |
+| File Upload         | A05: Security Misconfiguration / A03: Injection  |
+| File Inclusion      | A03: Injection                                   |
+| CSRF                | A01: Broken Access Control                       |
+| Insecure CAPTCHA    | A04: Insecure Design                             |
+| Weak Session IDs    | A07: Identification and Authentication Failures |
+| CSP Bypass          | A05: Security Misconfiguration                   |
+
 
 ---
 
