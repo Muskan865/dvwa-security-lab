@@ -276,16 +276,19 @@ At the Medium level, DVWA attempts to sanitize the message field but does not fu
 Payload Used:
 
 ```
-</div><img src=x onerror=alert(1)>
+<img src=x onerror=alert(1)>
 ```
 
 Result:
+The payload executed JavaScript.
 
-The payload did not execute JavaScript.
+Screenshot:
+
+![XSS Stored](images/xss_stored/high.png)
 
 Explanation:
 
-At the High security level, the application performs stronger input filtering and output encoding. Dangerous attributes are removed and special characters are encoded. Because of this, the browser treats the input as plain text rather than executable JavaScript.
+It worked because the application only tried to block <script> tags but did not filter HTML event attributes like onerror or onload. When the page loaded, the browser executed the JavaScript inside the event handler. Since the input was stored in the database, the malicious code ran every time the page was viewed.
 
 ---
 
