@@ -1173,19 +1173,73 @@ If the application were deployed publicly with such vulnerabilities, attackers c
 
 # 6. HTTPS Implementation (Bonus)
 
-DVWA was deployed behind an Nginx reverse proxy with a self-signed SSL certificate.  
-Nginx handled HTTPS connections and forwarded traffic to the DVWA container running on HTTP.
+Nginx Reverse Proxy with HTTPS
 
-Testing showed that HTTP traffic exposed credentials in plain text, while HTTPS traffic encrypted the communication using TLS.
+Objective
+
+Configure an Nginx reverse proxy to secure the DVWA application using HTTPS with a self-signed SSL certificate.
+
+# Step 1: Create SSL Certificate
+
+A self-signed certificate and private key were generated using OpenSSL.
+
+```bash
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout dvwa.key -out dvwa.crt
+```
+
+This created two files:
+
+- `dvwa.crt` – SSL certificate  
+- `dvwa.key` – Private key  
+![ngix_conf](images/bonus/ngix.png)
+---
+
+# Step 2: Configure Nginx Reverse Proxy
+
+An `nginx.conf` configuration file was created to:
+
+- Redirect HTTP traffic to HTTPS
+- Enable SSL encryption
+- Forward requests to the DVWA container running on port 8080
+![ngix_conf](images/bonus/conf.png)
 
 ---
+
+# Step 3: Run Nginx Container
+
+The Nginx container was started with mounted configuration and certificate files.
+
+```bash
+docker run -d -p 443:443 -p 80:80 \
+-v ${PWD}/nginx.conf:/etc/nginx/nginx.conf \
+-v ${PWD}/dvwa.crt:/etc/nginx/dvwa.crt \
+-v ${PWD}/dvwa.key:/etc/nginx/dvwa.key \
+nginx
+```
+
+---
+
+# Step 4: Access through reverse proxy
+
+![HTTPS](images/bonus/insecure.png)
+
+The browser displayed a certificate warning because a self-signed certificate was used.
+
+After proceeding, the DVWA application loaded successfully over HTTPS.
+
+---
+
+## Result
+
+The Nginx reverse proxy successfully:
+
+- Redirects HTTP traffic to HTTPS
+- Encrypts communication using SSL
+- Forwards requests securely to the DVWA container
+
+---
+
 HTTP transmits data in plain text. When accessing DVWA through HTTP, sensitive information such as usernames and passwords can be viewed directly in the network traffic.
 
 HTTPS encrypts communication using SSL/TLS. When accessing DVWA through HTTPS, the traffic is encrypted and cannot be easily read by attackers.
 
-Observation:
-
-HTTP request shows:
-username=admin&password=password
-
-HTTPS request shows encrypted TLS packets instead of readable data.
