@@ -1009,6 +1009,57 @@ Screenshot:
 Explanation:
 
 The High security level attempts to restrict file inclusion by validating input. However, the validation does not properly block alternative file access methods such as the file:// protocol. This allows attackers to bypass the filter and access sensitive files.
+---
+
+# 3.14 Insecure CAPTCHA
+
+## Security Level: Low
+Payload Used:
+```
+step=2&password_new=test123&password_conf=test123&Change=Change
+```
+Result:
+The password was successfully changed without solving the CAPTCHA challenge.
+
+Screenshot:
+
+![Catcha low](images/captcha/low.png)
+
+Explanation:
+At the Low security level, DVWA does not properly verify the CAPTCHA on the server side. The validation is performed only through client-side checks in the browser. Because of this, an attacker can intercept the request and submit it directly to the server without completing the CAPTCHA challenge. Since the server does not perform its own verification, the password change request is accepted.
+
+## Security Level: Medium
+Payload Used:
+```
+step=2&password_new=test123&password_conf=test123&passed_captcha=true&Change=Change
+```
+Result:
+The password was successfully changed without solving the CAPTCHA correctly.
+
+Screenshot:
+
+![Catcha low](images/captcha/medium.png)
+
+Explanation:
+At the Medium security level, DVWA introduces a parameter called passed_captcha to indicate whether the CAPTCHA was solved. However, this parameter is controlled by the client and is not securely validated by the server. By intercepting the request and manually setting passed_captcha=true, the attacker can bypass the CAPTCHA verification and change the password.
+
+## Security Level: High
+Payload Used:
+```
+step=2&password_new=test123&password_conf=test123&g-recaptcha-response=hidd3n_valu3&Change=Change
+Modified Header
+
+User-Agent: reCAPTCHA
+```
+Result:
+The password was successfully changed without solving the CAPTCHA challenge.
+
+Screenshot:
+
+![Catcha low](images/captcha/high.png)
+
+Explanation:
+At the High security level, DVWA attempts to validate CAPTCHA using the g-recaptcha-response parameter. However, the application does not properly verify this response with the CAPTCHA verification service. By manually adding a fake g-recaptcha-response value and modifying the request header to mimic a reCAPTCHA request, the attacker can trick the application into assuming that the CAPTCHA verification was successful. Because of this, the password change request is accepted.
 
 # 4. Docker Inspection Tasks
 
